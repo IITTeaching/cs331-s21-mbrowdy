@@ -34,7 +34,17 @@ ROMEO_SOLILOQUY = """
 # Implement this function
 def compute_ngrams(toks, n=2):
     """Returns an n-gram dictionary based on the provided list of tokens."""
-    pass
+    dic = {}
+    toks_list = []
+    for t in range(len(toks) - n + 1):
+        toks_list.append(tuple([toks[t+i] for i in range(n)]))
+    for tl in toks_list:    
+        next_adding = tuple(tl[1:])
+        if(tl[0] in dic):
+            dic[tl[0]].append(next_adding)
+        else:
+            dic[tl[0]] = [next_adding]
+    return dic
 
 def test1():
     test1_1()
@@ -93,7 +103,29 @@ def test1_2():
 ################################################################################
 # Implement this function
 def gen_passage(ngram_dict, length=100):
-    pass
+    """1. Select a random key from the dictionary and use it as the start token of the passage. 
+    It will also serve as the current token for the next step.
+    2. Select a random tuple from the list associated with the current token and append the 
+    sequence to the passage. The last token of the selected sequence will be the new current token.
+    3. If the current token is a key in the dictionary then simply repeat step 2, otherwise select 
+    another random key from the map as the current token and append it to the passage before repeating
+    step 2."""
+    passage = ''
+    #1
+    sorted_keys = sorted(ngram_dict.keys())
+    current = random.choice(sorted_keys)
+    passage += current + " "
+    while(len(passage.split()) < length):
+        #2
+        if(current in ngram_dict): 
+            current = random.choice(ngram_dict[current])
+            passage += ' '.join(current) + " "
+            current = current[-1]
+        #3
+        else:
+            current = random.choice(sorted_keys)
+            passage += current + " "
+    return passage[0:len(passage)-1]
 
 # 50 Points
 def test2():
