@@ -17,8 +17,17 @@ def mysort(lst: List[T], compare: Callable[[T, T], int]) -> List[T]:
     right element, 1 if the left is larger than the right, and 0 if the two
     elements are equal.
     """
-    pass
-
+    # insertion sort
+    for i in range(1, len(lst)):
+        for j in range(i, 0, -1):
+            if compare(lst[j], lst[j-1]) == -1:
+                temp = lst[j-1]
+                lst[j-1] = lst[j]
+                lst[j] = temp
+            else:
+                break
+    return lst
+    
 def mybinsearch(lst: List[T], elem: S, compare: Callable[[T, S], int]) -> int:
     """
     This method search for elem in lst using binary search.
@@ -27,7 +36,19 @@ def mybinsearch(lst: List[T], elem: S, compare: Callable[[T, S], int]) -> int:
     position of the first (leftmost) match for elem in lst. If elem does not
     exist in lst, then return -1.
     """
-    pass
+    low = 0
+    high = len(lst) - 1
+    mid = (low + high)//2
+    while(True):
+        if compare(lst[mid], elem) == 0:
+            return mid
+            break
+        elif compare(lst[mid], elem) == 1:
+            low = mid + 1
+        else:
+            high = mid - 1
+        mid = (low + high)//2
+    return -1
 
 class Student():
     """Custom class to test generic sorting and searching."""
@@ -112,7 +133,16 @@ class PrefixSearcher():
         Initializes a prefix searcher using a document and a maximum
         search string length k.
         """
-        pass
+        self.doc = document
+        self.maxlen = k
+        ps = []
+        for i in range(len(doc)):
+            if i <= len(doc)-k:
+                ps.append(doc[i:i+k])
+            else:
+                ps.append(doc[i:])
+        pscmp = lambda x,y:  0 if x == y else (-1 if x < y else 1)
+        ps = mysort(ps, pscmp)
 
     def search(self, q):
         """
@@ -121,7 +151,9 @@ class PrefixSearcher():
         length up to n). If q is longer than n, then raise an
         Exception.
         """
-        pass
+        if len(q) > self.maxlen: 
+            raise Exception("String is longer than max length ({})!".format(k))
+        return q in self.doc
 
 # 30 Points
 def test2():
