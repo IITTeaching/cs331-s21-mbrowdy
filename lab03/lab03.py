@@ -38,16 +38,15 @@ def mybinsearch(lst: List[T], elem: S, compare: Callable[[T, S], int]) -> int:
     """
     low = 0
     high = len(lst) - 1
-    mid = (low + high)//2
-    while(True):
+    mid = 0
+    while low <= high: #changed this bc while True froze it
+        mid = (low + high)//2
         if compare(lst[mid], elem) == 0:
             return mid
-            break
         elif compare(lst[mid], elem) == 1:
-            low = mid + 1
-        else:
             high = mid - 1
-        mid = (low + high)//2
+        else:
+            low = mid + 1
     return -1
 
 class Student():
@@ -136,11 +135,11 @@ class PrefixSearcher():
         self.doc = document
         self.maxlen = k
         ps = []
-        for i in range(len(doc)):
-            if i <= len(doc)-k:
-                ps.append(doc[i:i+k])
+        for i in range(len(self.doc)):
+            if i <= len(self.doc)-k:
+                ps.append(self.doc[i:i+k])
             else:
-                ps.append(doc[i:])
+                ps.append(self.doc[i:])
         pscmp = lambda x,y:  0 if x == y else (-1 if x < y else 1)
         ps = mysort(ps, pscmp)
 
@@ -190,25 +189,34 @@ def test2_2():
 # EXERCISE 3
 #################################################################################
 class SuffixArray():
-
+    #doesn't pass very last test
     def __init__(self, document: str):
         """
         Creates a suffix array for document (a string).
         """
-        pass
+        self.doc = document
+        sa = []
+        for i in range(len(self.doc)):
+            sa.append(self.doc[i:])
+        sacmp = lambda x,y:  0 if x == y else (-1 if x < y else 1)
+        sa = mysort(sa, sacmp)
 
 
     def positions(self, searchstr: str):
         """
         Returns all the positions of searchstr in the documented indexed by the suffix array.
         """
-        pass
+        positions = []
+        for i in range(len(self.doc)):
+            if self.doc[i:i+len(searchstr)] == searchstr:
+                positions.append(i)
+        return positions
 
     def contains(self, searchstr: str):
         """
-        Returns true of searchstr is coontained in document.
+        Returns true of searchstr is contained in document.
         """
-        pass
+        return searchstr in self.doc
 
 # 40 Points
 def test3():
